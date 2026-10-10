@@ -1,0 +1,49 @@
+:root,[data-theme="mission-control"] {
+--bg: #1a2342;
+  --surface: #151C33;
+  --text: #e9e9e9dc;
+  --accent: #FF6B35;       
+  --accent-2: #3DD6F5;
+}
+
+.title {
+    text-align: center;
+}
+
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.25rem;
+}
+
+.countdown {
+  color: var(--accent);
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+}
+
+
+.place-holder-countdown{
+    border-radius: 4px;
+    border: #FF6B35;
+    border-style: solid;
+   
+}
+
