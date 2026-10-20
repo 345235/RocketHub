@@ -1,22 +1,38 @@
-import { error, time } from "console";
 import "dotenv/config";
 import express from "express";
 import path from "path";
-import { Script } from "vm";
+import { fileURLToPath } from "url";
 
 const app = express();
-const root = process.cwd();
+const root = path.dirname(fileURLToPath(import.meta.url));
 
-app.get("/", (_req, res) => res.sendFile(path.join(root, "spacehub.html")));
-app.get("/style.css", (_req, res) => res.sendFile(path.join(root, "style.css")));
-app.get("/script.js", (_req, res) => res.sendFile(path.join(root, "script.js")));
+app.use("/api", (req, res, next) => {
+    const origin = req.get("Origin");
+    const isLocalOrigin = origin === "null" || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin || "");
+
+    if (isLocalOrigin) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+    }
+
+    if (req.method === "OPTIONS") {
+        res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        return res.sendStatus(204);
+    }
+
+    next();
+});
+
+app.get("/", (_req, res) => res.sendFile("spacehub.html", { root }));
+app.get("/style.css", (_req, res) => res.sendFile("style.css", { root }));
+app.get("/script.js", (_req, res) => res.sendFile("script.js", { root }));
 
 let cache = {data: null, time: 0 };
 const TTL = 10 * 60 * 1000;
 
 app.get("/api/launches", async (_req, res) => {
     try {
-        if (cache.data && Data.now () -cache.time  < TTL) {
+        if (cache.data && Date.now() - cache.time < TTL) {
             return res.json(cache.data)
         }
         const headers = {};
@@ -28,14 +44,24 @@ app.get("/api/launches", async (_req, res) => {
             { headers }
         );
         if (!r.ok){
-            return res.status(r.status).json({ error: "Launch API error" })
+            if (cache.data?.results?.some(launch => Date.parse(launch.net) > Date.now())) {
+                return res.json(cache.data);
+            }
+            const error = r.status === 429
+                ? "Launch provider rate limit reached. Try again later or configure LL2_API_KEY."
+                : `Launch provider returned ${r.status}`;
+            return res.status(r.status).json({ error });
         }
 
-        cache = { data: await r.json(), time: Date.now() };
+        const data = await r.json();
+        if (!Array.isArray(data.results)) throw new Error("Unexpected response from launch provider");
+        cache = { data, time: Date.now() };
         res.json(cache.data);
-    } catch {
+    } catch (err) {
+        console.error("Could not fetch launch data:", err);
         res.status(500).json({ error: "Failed to fetch launches" });
     }
 });
 
-app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server running on http://localhost:${port}`));

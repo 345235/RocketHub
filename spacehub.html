@@ -1,27 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Spacehub</title>
+    <title>SpaceHub </title>
 </head>
 <body>
-    <sidebar>
-        
-    </sidebar>
+<nav class="topbar" aria-label="Main navigation">
+    <span class="brand">SpaceHub</span>
+</nav>
 <div class="title">
-   <h1 class="title_text1">
-        Next Flight 
-   </h1>
-     <h1 class="title_text1">
-        in
-     </h1>
     <div class="newest_countdown">
-        <p id="launch-name">loading...</p>
-        <p id="countdown"></p>
+        <p class="eyebrow">NEXT LAUNCH</p>
+        <img id="launch-image" class="launch-image" alt="" hidden>
+        <h1 id="launch-name">Loading launch...</h1>
+        <p id="launch-company" class="launch-company"></p>
+        <p class="countdown-label">Launching in</p>
+        <p id="countdown" class="countdown"></p>
+        <button id="retry-button" class="retry-button" hidden>Try again</button>
     </div>
+    <section class="launch-board" aria-labelledby="board-title">
+        <div class="board-heading">
+            <h2 id="board-title">UPCOMING DEPARTURES</h2>
+            <span class="board-status">● LIVE</span>
+        </div>
+        <div class="board-scroll">
+            <table>
+                <thead><tr><th>Flight</th><th>Operator</th><th>T-0 (UTC)</th><th>Countdown</th></tr></thead>
+                <tbody id="launch-list"><tr><td colspan="4">Loading launches...</td></tr></tbody>
+            </table>
+        </div>
+    </section>
+ </div>
     <script src="script.js"></script>    
-</div>
 </body>
 </html>
