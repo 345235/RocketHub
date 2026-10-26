@@ -65,16 +65,7 @@ async function fetchLaunches() {
     return data;
 }
 
-if (retryButton) {
-    retryButton.addEventListener("click", loadNextLaunch);
-}
-if (imageEl) {
-    imageEl.addEventListener("error", () => { imageEl.hidden = true; });
-}
-
-async function fetchLaunches() {
-    const local = !location.hostname || ["localhost", "127.0.0.1"].includes(location.hostname);
-    let res;
+async function loadNextLaunch() {
     try {
         const data = await fetchLaunches();
         const launches =
@@ -161,12 +152,6 @@ function escapeHtml(value) {
         /[&<>"']/g,
         (character) => htmlEscapes[character]
     );
-}
-
-function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    })[char]);
 }
 
 function startCountdown(target) {
