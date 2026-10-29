@@ -55,15 +55,6 @@ async function fetchLaunches() {
         }
     }
 
-    const hasJsonContentType = response?.headers
-        .get("content-type")
-        ?.includes("application/json");
-
-    if (!response || !hasJsonContentType) {
-        throw new Error(
-            "The launch API returned a web page instead of data. Run `npm start` and open http://localhost:3000."
-        );
-    }
 
     const data = await response.json();
     if (!response.ok) {
