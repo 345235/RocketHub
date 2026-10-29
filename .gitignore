@@ -1,1 +1,15 @@
+
+# secrets
 .env
+.env.*
+.dev.vars
+
+# dependencies
+node_modules
+
+# Cloudflare / Wrangler local files
+.wrangler/
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
