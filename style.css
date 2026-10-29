@@ -61,8 +61,8 @@ body {
   min-width: 0;
   overflow: hidden;
   border: 1px solid #ffffff20;
-  border-radius: 0.75rem;
-  background: #111a2c;
+  border-radius: 3px;
+  background: #0e0d0d;
   box-shadow: 0 0.6rem 1.8rem #0003;
 }
 .newest_countdown {
@@ -146,7 +146,7 @@ body {
   color: #f4cf66;
   background: repeating-linear-gradient(0deg, #101113, #101113 3px, #141517 4px);
   border: 1px solid #56534a;
-  border-radius: 5px;
+  
   box-shadow: inset 0 0 0 3px #08090a, 0 8px 24px #0005;
 }
 
@@ -297,3 +297,8 @@ margin-top: 10px;
   box-shadow: 0 0 20px var(--accent);
   transform: translateY(-1px);
 }
+.live-button[hidden] {
+  display: none;
+}
+
+

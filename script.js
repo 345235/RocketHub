@@ -4,6 +4,16 @@ const companyEl = document.getElementById("launch-company");
 const imageEl = document.getElementById("launch-image");
 const retryButton = document.getElementById("retry-button");
 const launchList = document.getElementById("launch-list");
+const Live_button = document.getElementById("live-button");
+let liveUrl = null;
+Live_button.addEventListener("click", () => {
+    if (liveUrl) {
+        window.open(liveUrl, "_blank", "noopener,noreferrer")
+    }
+});
+
+
+
 let countdownTimer;
 
 if (retryButton) {
@@ -127,6 +137,7 @@ async function loadNextLaunch() {
             '<tr><td colspan="4">No other launches scheduled.</td></tr>';
 
         startCountdown(new Date(next.net));
+        updateLive_button(next);
     } catch (err) {
         nameEl.textContent = "Launch information unavailable";
         countdownElement.textContent = err.message;
@@ -136,7 +147,38 @@ async function loadNextLaunch() {
             </tr>`;
         retryButton.hidden = false;
         console.error("Could not load launch data:", err);
+
+        retryButton.hidden = false;
+        Live_button.hidden = true;
     }
+}
+
+function updateLive_button(launch){
+    liveUrl = null;
+    Live_button.hidden = true 
+
+    const streams = launch.vid_urls ?? []
+     
+     const best = [...streams].sort (
+        (a,b) => (a.priority ?? 99) - (b.priority ?? 99)
+     )[0];
+    if (!best?.url) return;
+
+try {
+    if (new URL (best.url).protocol !== "https:") 
+ return;
+
+}
+catch{
+    return;
+}
+
+
+liveUrl = best.url;
+Live_button.textContent = launch.webcast_live
+  ? "● Watch live now"
+  : "● Watch stream "
+  Live_button.hidden = false
 }
 
 function escapeHtml(value) {
@@ -215,3 +257,8 @@ function formatBoardCountdown(diff) {
 }
 
 loadNextLaunch();
+
+retryButton.hidden = true;
+
+
+
