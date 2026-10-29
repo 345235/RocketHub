@@ -18,10 +18,6 @@ async function getLaunches(request, env, ctx) {
   const headers = {};
   if (env.LL2_API_KEY) headers.Authorization = `Token ${env.LL2_API_KEY}`;
 
-  const r = await fetch(
-    "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20",
-    { headers }
-  );
  if (!r.ok) {
   const body = await r.text();
   return Response.json (
@@ -29,6 +25,11 @@ async function getLaunches(request, env, ctx) {
      { status: r.status }
   );
  }
+
+   const r = await fetch(
+    "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20",
+    { headers, cf: { cacheTtl: 600, cacheEverything: true } }
+  );
 
   const res = new Response(r.body, {
     headers: {
