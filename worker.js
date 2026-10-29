@@ -22,9 +22,13 @@ async function getLaunches(request, env, ctx) {
     "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20",
     { headers }
   );
-  if (!r.ok) {
-    return Response.json({ error: "Launch API error" }, { status: r.status });
-  }
+ if (!r.ok) {
+  const body = await r.text();
+  return Response.json (
+     { error: "Launch API error", status: r.status, detail: body.slice(0, 300) },
+     { status: r.status }
+  );
+ }
 
   const res = new Response(r.body, {
     headers: {
