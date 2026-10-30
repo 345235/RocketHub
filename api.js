@@ -55,7 +55,7 @@ app.get("/api/launches", async (_req, res) => {
         }
 
         const response = await fetch(
-           "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20&mode=detailed",
+           "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20&mode=detailed", 
             { headers }
         );
 
