@@ -10,42 +10,46 @@ export default {
   },
 };
 
-async function getLaunches(request, env, ctx ) {
+async function getLaunches(request, env, ctx) {
   try {
     const cache = caches.default;
     const hit = await cache.match(request);
     if (hit) return hit;
 
-
     const headers = {};
     if (env.LL2_API_KEY) headers.Authorization = `Token ${env.LL2_API_KEY}`;
 
-    const r = await fetch (
+    const r = await fetch(
       "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20",
-      { headers, cf: {cacheTtl: 600, cacheEverything: true } }
+      {
+        headers,
+        cf: {
+          cacheEverything: true,
+          cacheTtlByStatus: { "200-299": 600, "400-599": 0 },
+        },
+      }
     );
-    if (!r.ok){
-      const body = await r.text ();
+
+    if (!r.ok) {
+      const body = await r.text();
       return Response.json(
         { error: "Launch API error", status: r.status, detail: body.slice(0, 300) },
         { status: r.status }
       );
     }
- 
-  const res = new Response(r.body, {
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "public, max-age=600",
-    },
-  });
-  ctx.waitUntil(cache.put(request, res.clone()));
-  return res; 
-} catch (err) {
-  return Response.json (
-    { error: "Worker crashed", detail: String(err) },
-    { status: 500 }
-  );
- }
-}
-  
 
+    const res = new Response(r.body, {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "public, max-age=600",
+      },
+    });
+    ctx.waitUntil(cache.put(request, res.clone()));
+    return res;
+  } catch (err) {
+    return Response.json(
+      { error: "Worker crashed", detail: String(err) },
+      { status: 500 }
+    );
+  }
+}
