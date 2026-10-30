@@ -21,7 +21,7 @@ async function getLaunches(request, env, ctx ) {
     if (env.LL2_API_KEY) headers.Authorization = `Token ${env.LL2_API_KEY}`;
 
     const r = await fetch (
-      "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20&mode=detailed",
+      "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20",
       { headers, cf: {cacheTtl: 600, cacheEverything: true } }
     );
     if (!r.ok){
