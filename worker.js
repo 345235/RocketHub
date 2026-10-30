@@ -13,39 +13,50 @@ export default {
 async function getLaunches(request, env, ctx) {
   try {
     const cache = caches.default;
-    const hit = await cache.match(request);
-    if (hit) return hit;
+    const origin = new URL(request.url).origin;
+    const freshKey = new Request(`${origin}/__cache/launches-fresh`);
+    const staleKey = new Request(`${origin}/__cache/launches-stale`);
+
+    const fresh = await cache.match(freshKey);
+    if (fresh) return fresh;
 
     const headers = {};
     if (env.LL2_API_KEY) headers.Authorization = `Token ${env.LL2_API_KEY}`;
 
     const r = await fetch(
       "https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=20",
-      {
-        headers,
-        cf: {
-          cacheEverything: true,
-          cacheTtlByStatus: { "200-299": 600, "400-599": 0 },
-        },
-      }
+      { headers }
     );
 
-    if (!r.ok) {
+    if (r.ok) {
       const body = await r.text();
-      return Response.json(
-        { error: "Launch API error", status: r.status, detail: body.slice(0, 300) },
-        { status: r.status }
+      const json = { "Content-Type": "application/json" };
+      ctx.waitUntil(
+        Promise.all([
+          cache.put(freshKey, new Response(body, {
+            headers: { ...json, "Cache-Control": "public, max-age=600" },
+          })),
+          cache.put(staleKey, new Response(body, {
+            headers: { ...json, "Cache-Control": "public, max-age=86400" },
+          })),
+        ])
       );
+      return new Response(body, { headers: json });
     }
 
-    const res = new Response(r.body, {
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=600",
-      },
-    });
-    ctx.waitUntil(cache.put(request, res.clone()));
-    return res;
+    const stale = await cache.match(staleKey);
+    if (stale) {
+      const body = await stale.text();
+      return new Response(body, {
+        headers: { "Content-Type": "application/json", "X-Data-Stale": "true" },
+      });
+    }
+
+    const detail = (await r.text()).slice(0, 300);
+    return Response.json(
+      { error: "Launch API error", status: r.status, detail },
+      { status: r.status }
+    );
   } catch (err) {
     return Response.json(
       { error: "Worker crashed", detail: String(err) },
