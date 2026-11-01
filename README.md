@@ -26,7 +26,7 @@ ____
 
 I use the LL2 free api site https://thespacedevs.com/llapi 
 
-___
+----------
 ### Problems 
 When you launch the page the api might be giving you an error thats because its only the free version of the api and it only allows 15 requests per hour 
 <img width="1521" height="1006" alt="image" src="https://github.com/user-attachments/assets/9e82de7c-69df-4c24-80f9-a31b3950b128" />
