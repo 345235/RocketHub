@@ -42,3 +42,12 @@ Here to Hack Club https://hackclub.com/
 
 <img width="1649" height="629" alt="stardance-logo-df399a7f" src="https://github.com/user-attachments/assets/6f50abb1-de03-410d-a071-25279df31343" />
 
+-------
+
+
+
+## Made with 
+*### Javascript
+*### HTML
+*### CSS
+
