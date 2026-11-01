@@ -4,7 +4,7 @@ Rocket hub is a page that shows you the next rocket launche with a image the com
 
 <img width="1663" height="890" alt="image" src="https://github.com/user-attachments/assets/883076d4-c024-4864-bb92-fb00b5b641c2" />
 
-_____
+
 ----
 ### 🛠️Features 
 
