@@ -47,7 +47,7 @@ Here to Hack Club https://hackclub.com/
 
 
 ## Made with 
-*### Javascript
-*### HTML
-*### CSS
+* ### Javascript
+* ### HTML
+* ### CSS
 
