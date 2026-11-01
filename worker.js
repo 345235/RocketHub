@@ -54,7 +54,7 @@ async function getLaunches(request, env, ctx) {
 
     const detail = (await r.text()).slice(0, 300);
     return Response.json(
-      { error: "Launch API error", status: r.status, detail },
+      { error: "Too many requests try again later ", status: r.status, detail },
       { status: r.status }
     );
   } catch (err) {
