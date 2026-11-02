@@ -32,6 +32,8 @@ When you launch the page the api might be giving you an error thats because its 
 <img width="1521" height="1006" alt="image" src="https://github.com/user-attachments/assets/9e82de7c-69df-4c24-80f9-a31b3950b128" />
 
 If you have it heres a link to see when it gets online again https://rockethub.lucky-bread-b5ff.workers.dev/api/launches 
+Or this https://rockethub.page/api/launches
+if both sites arent showing you a 429 then and the problem persists notfiy me
 
 _____
 ## Stardance 
